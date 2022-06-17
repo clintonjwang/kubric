@@ -1,0 +1,868 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2014 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Fri Jun 17 14:30:04 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# makefile (from 'Makefile', line 6)
+.SHELLFLAGS := -c -e
+# environment
+VSCODE_AGENT_FOLDER = /data/vision/polina/users/clintonw/.vscode-server
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# default
+MAKE_VERSION := 4.1
+# makefile
+CURDIR := /data/vision/polina/users/clintonw/code/kubric
+# makefile (from 'Makefile', line 4)
+SHELL = /bin/bash
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
+# environment
+_ = /data/vision/polina/users/clintonw/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/node
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/24718/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_CWD = /data/vision/polina/users/clintonw/code
+# environment
+KRB5CCNAME = FILE:/tmp/krb5cc_24718_rq638Y
+# environment
+SSH_CONNECTION = 10.29.60.65 54327 128.30.100.72 22
+# environment
+PATH = /data/vision/polina/users/clintonw/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/remote-cli:/data/vision/polina/users/clintonw/anaconda3/envs/cuda11/bin:/data/vision/polina/users/clintonw/bin:/data/vision/polina/users/clintonw/anaconda3/bin:/usr/local/csail/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# environment
+XDG_RUNTIME_DIR = /run/user/24718
+# environment
+CONDA_PREFIX = /data/vision/polina/users/clintonw/anaconda3/envs/cuda11
+# environment
+VSCODE_LOG_STACK = false
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# automatic
+%F = $(notdir $%)
+# environment
+CONDA_EXE = /data/vision/polina/users/clintonw/anaconda3/bin/conda
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /data/vision/polina/users/clintonw/code/kubric
+# environment
+VSCODE_IPC_HOOK_CLI = /run/user/24718/vscode-ipc-80c852c1-0e74-4ce1-9d57-db84b078a6ea.sock
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /data/vision/polina/users/clintonw
+# environment
+CUDA_HOME = /usr/local/cuda-11.3
+# environment
+LOGNAME = clintonw
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+CONDA_PROMPT_MODIFIER = (cuda11) 
+# automatic
++F = $(notdir $+)
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MAKELEVEL := 0
+# environment
+CONDA_DEFAULT_ENV = cuda11
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+SCRATCH = /data/vision/polina/scratch/clintonw
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 3
+# environment
+XDG_SESSION_ID = 6
+# environment
+USER = clintonw
+# makefile
+.DEFAULT_GOAL := checkmakeversion
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+CONDA_SHLVL = 1
+# default
+MAKE_COMMAND := make
+# environment
+OLDPWD = /data/vision/polina/users/clintonw/code
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+LANGUAGE = en_US:
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_CLIENT = 10.29.60.65 54327 22
+# environment
+MAIL = /var/mail/clintonw
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+BROWSER = /data/vision/polina/users/clintonw/.vscode-server/bin/30d9c6cd9483b2cc586687151bcbcd635f373630/bin/helpers/browser.sh
+# environment
+S_COLORS = auto
+# environment
+VSCODE_HANDLES_SIGPIPE = true
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# environment
+CONDA_PYTHON_EXE = /data/vision/polina/users/clintonw/anaconda3/bin/python
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+_CE_M = 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# default
+.RECIPEPREFIX := 
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+LANG = C
+# environment
+VSCODE_EXTHOST_WILL_SEND_SOCKET = true
+# environment
+_CE_CONDA = 
+# variable set hash-table stats:
+# Load=77/1024=8%, Rehash=0, Collisions=10/111=9%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 57, inode 692552): 27 files, no impossibilities.
+
+# 27 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+examples/klevr: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 57):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev python3 examples/klevr.py
+
+# Not a target:
+docs/source:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/katr: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 59):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev python3 examples/katr.py
+
+# Not a target:
+docs/conf.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+.ONESHELL:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+challenges/complex_brdf: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 67):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace --env SHAPENET_GCP_BUCKET=$${SHAPENET_GCP_BUCKET} kubricdockerhub/kubruntudev python3 challenges/complex_brdf/worker.py
+
+# Not a target:
+setup.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/0_installing.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/scripts/download_GSO.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+kubric/safeimport/bpy.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/sunds/render_mock_utils.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+.PHONY: clean docs
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/keyframing: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 63):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev python3 examples/keyframing.py
+
+# Not a target:
+kubric/assets/utils.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/simulator/pybullet.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/make.bat:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+ 
+#  File has not been updated.
+
+kubruntu: dist docker/Kubruntu.Dockerfile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 24):
+	docker build -f docker/Kubruntu.Dockerfile -t kubricdockerhub/kubruntu:latest .
+
+# Not a target:
+docs/images/helloworld_segmentation.png:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/index.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+checkmakeversion:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 12):
+	@if [[ $(MAKE_VERSION) < 3.82 ]] ; then echo "ERROR: make>=3.82 needed"; exit 1; fi
+
+# Not a target:
+kubric/renderer/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/datasets/movid.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/kubric.core.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-13 19:33:26.726529058
+#  File has been updated.
+#  Successfully updated.
+
+clean_build:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 115):
+	rm -rf dist
+	rm -rf build
+	rm -rf kubric.egg-info
+
+# Not a target:
+kubric/redirect_io.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/basic: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 51):
+	python3 examples/basic.py
+
+# Not a target:
+kubric/post_processing.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docker/Blender.Dockerfile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/requirements.txt:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/scene.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/kubric.simulator.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/color.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+kubruntudev/bash: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 39):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev bash
+
+# Not a target:
+kubric/scripts/export_assets_from_blend.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/assets.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+pypi_test/read:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 96):
+	@virtualenv --quiet --system-site-packages -p python3 /tmp/testenv
+	@/tmp/testenv/bin/pip3 install \
+		--upgrade --no-cache-dir \
+		--index-url https://test.pypi.org/simple \
+		--extra-index-url https://pypi.org/simple \
+		kubric-secondly==$${VERSION}
+	@/tmp/testenv/bin/python3 examples/basic.py
+
+# Not a target:
+kubric/core/view.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/helloworld.png:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/scripts/download_hdri_haven.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+kubruntu/push:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 33):
+	docker push kubricdockerhub/kubruntu:latest
+
+# Not a target:
+kubric/randomness.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/KLEVR.gif:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/assets/asset_preprocessing.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+tag:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 106):
+	git log --pretty=oneline
+	@read -p "shah of commit to tag: " SHAH
+	@read -p "tag name (e.g. v0.1): " TAG
+	@read -p "tag description: " MESSAGE
+	git tag -a $${TAG} -m $${MESSAGE} $${SHAH}
+	git push origin --tags
+
+# Not a target:
+kubric/sunds/kubric_builder_test.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+kubruntudev: docker/KubruntuDev.Dockerfile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 26):
+	docker build -f docker/KubruntuDev.Dockerfile -t kubricdockerhub/kubruntudev:latest .
+
+# Not a target:
+kubric/utils.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/plotting.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+pypi_test/write: clean_build
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 89):
+	python3 setup.py sdist bdist_wheel --secondly
+	python3 -m twine check dist/*
+	python3 -m twine upload -u kubric --repository testpypi dist/*
+
+# Not a target:
+kubric/core/objects.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/kubric_typing.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/renderer/blender_utils.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+pylint: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 83):
+	@TARGET=$${TARGET:-kubric/}
+	echo "running kubricdockerhub/kubruntudev pylint on" $${TARGET}
+	docker run --rm --interactive --volume  `pwd`:/workspace kubricdockerhub/kubruntudev pylint --rcfile=.pylintrc $${TARGET}
+
+# Not a target:
+kubric/assets/asset_source.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/X_assets.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ 
+docker/Kubruntu.Dockerfile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/scripts/kubasic.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+pytest: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 76):
+	@TARGET=$${TARGET:-test/}
+	echo "pytest (kubricdockerhub/kubruntudev) on folder" $${TARGET}
+	docker run --rm --interactive --volume `pwd`:/workspace kubricdockerhub/kubruntudev pytest --disable-warnings --exitfirst $${TARGET}
+
+kubruntudev/push:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 35):
+	docker push kubricdockerhub/kubruntudev:latest
+
+# Not a target:
+kubric/core/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean: clean_build
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 120):
+	rm -rf `find . -name "__pycache__"`
+	rm -rf `find . -name ".pytest_cache"`
+	cd docs && $(MAKE) clean
+
+docs_server:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 47):
+	cd docs/_build/html && python3 -m http.server 8000
+
+# Not a target:
+docs/images/KuBasic.jpg:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/teaser.gif:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+blender: docker/Blender.Dockerfile
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 16):
+	docker build -f docker/Blender.Dockerfile -t kubricdockerhub/blender:latest .
+
+# Not a target:
+docs/source/kubric.assets.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+dist: setup.py kubric/core/scene.py kubric/core/cameras.py kubric/core/materials.py kubric/core/view.py kubric/core/assets.py kubric/core/color.py kubric/core/__init__.py kubric/core/lights.py kubric/core/traits.py kubric/core/objects.py kubric/__init__.py kubric/scripts/kubasic.py kubric/scripts/download_hdri_haven.py kubric/scripts/export_assets_from_blend.py kubric/scripts/download_GSO.py kubric/safeimport/__init__.py kubric/safeimport/bpy.py kubric/utils.py kubric/datasets/movid.py kubric/datasets/__init__.py kubric/datasets/utils.py kubric/post_processing.py kubric/renderer/blender_utils.py kubric/renderer/blender.py kubric/renderer/__init__.py kubric/simulator/__init__.py kubric/simulator/pybullet.py kubric/randomness.py kubric/assets/utils.py kubric/assets/__init__.py kubric/assets/asset_source.py kubric/assets/asset_preprocessing.py kubric/plotting.py kubric/file_io.py kubric/kubric_typing.py kubric/sunds/kubric_builder_test.py kubric/sunds/render_mock_utils.py kubric/sunds/__init__.py kubric/sunds/kubric_builder.py kubric/redirect_io.py
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 20):
+	python3 setup.py sdist bdist_wheel
+
+# Not a target:
+kubric/simulator/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+docs: docs docs/source docs/source/3_metadata.rst docs/source/kubric.renderer.rst docs/source/kubric.core.rst docs/source/kubric.assets.rst docs/source/X_assets.rst docs/source/X_kubric_api.rst docs/source/kubric.simulator.rst docs/source/1_helloworld.rst docs/source/2_simulator.rst docs/source/X_keyframing.rst docs/source/0_installing.rst docs/index.rst docs/make.bat docs/conf.py docs/requirements.txt docs/images docs/images/helloworld_blend.png docs/images/simulator.gif docs/images/KLEVR.gif docs/images/helloworld.png docs/images/KuBasic.jpg docs/images/helloworld_depth.png docs/images/teaser.gif docs/images/helloworld_segmentation.png docs/images/getting_started_blender_scene3.jpg docs/Makefile
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 43):
+	cd docs && $(MAKE) html
+
+# Not a target:
+kubric/sunds/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/sunds/kubric_builder.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/shapenet: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace --env SHAPENET_GCP_BUCKET=$${SHAPENET_GCP_BUCKET} kubricdockerhub/kubruntudev python3 examples/shapenet.py
+
+# Not a target:
+kubric/datasets/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/simulator.gif:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/helloworld_depth.png:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/kubric.renderer.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/helloworld_blend.png:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/helloworld: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 53):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev python3 examples/helloworld.py
+
+# Not a target:
+kubric/core/materials.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/cameras.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/datasets/utils.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docker/KubruntuDev.Dockerfile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/2_simulator.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/renderer/blender.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/Makefile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+blender/push:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 31):
+	docker push kubricdockerhub/blender:latest
+
+# Not a target:
+docs/source/X_keyframing.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/3_metadata.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/X_kubric_api.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/lights.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+examples/simulator: checkmakeversion
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 55):
+	docker run --rm --interactive --user `id -u`:`id -g` --volume `pwd`:/workspace kubricdockerhub/kubruntudev python3 examples/simulator.py
+
+# Not a target:
+kubric/safeimport/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/file_io.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/assets/__init__.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/source/1_helloworld.rst:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kubric/core/traits.py:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+docs/images/getting_started_blender_scene3.jpg:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=103/1024=10%, Rehash=0, Collisions=14/204=7%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 129 / storage = 2518 B / avg = 19 B
+# current buf: size = 8162 B / used = 2518 B / count = 129 / avg = 19 B
+
+# strcache performance: lookups = 180 / hit rate = 28%
+# hash-table stats:
+ 
+# Load=129/8192=2%, Rehash=0, Collisions=3/180=2%
+# Finished Make data base on Fri Jun 17 14:30:04 2022
+
+ 
