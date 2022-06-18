@@ -42,8 +42,8 @@ import pybullet as pb
 
 # --- Some configuration values
 # the region in which to place objects [(min), (max)]
-SPAWN_REGION = [(-5, -5, .3), (5, 5, 5)]
-CLEVR_OBJECTS = ("cube", "cylinder", "sphere")
+SPAWN_REGION = [(-6, -6, .3), (6, 6, 5)]
+CLEVR_OBJECTS = ("cube", "cylinder", "sphere", "cone", "torus")
 KUBASIC_OBJECTS = ("cube", "cylinder", "sphere", "cone", "torus", "gear",
                    "torus_knot", "sponge", "spot", "teapot", "suzanne")
 
@@ -69,7 +69,7 @@ parser.add_argument("--camera", choices=["clevr", "random", "spiral"], default="
 parser.add_argument("--kubasic_assets", type=str,
                     default="gs://kubric-public/assets/KuBasic/KuBasic.json")
 parser.add_argument("--save_state", dest="save_state", action="store_true")
-parser.set_defaults(save_state=False, frame_end=24, frame_rate=12,
+parser.set_defaults(save_state=False, frame_end=96, frame_rate=12,
                     resolution=256)
 
 parser.add_argument("--num_trajectories", type=int, default=2)
@@ -113,20 +113,49 @@ for i in range(FLAGS.num_trajectories):
   # Camera
   logging.info("Setting up the Camera...")
   scene.camera = kb.PerspectiveCamera(focal_length=35., sensor_width=32)
+ 
+  train_frames = []
+  # test_frames = []
+  num_frames = (FLAGS.frame_end + 1) - (FLAGS.frame_start)
+  #(FLAGS.frame_end + 2) - (FLAGS.frame_start - 1) for optical flow
   if FLAGS.camera == "spiral":
-    num_frames = (FLAGS.frame_end + 2) - (FLAGS.frame_start - 1)
-    R = 13
-    phis = np.linspace(np.pi, -np.pi, num_frames)
-    thetas = np.linspace(np.pi*.4, np.pi*.1, num_frames)
+    R = 15 + 2*np.random.randn(num_frames)
+    phis = np.linspace(0, 6*np.pi, num_frames)
+    thetas = np.linspace(np.pi*.55, np.pi*.1, num_frames)
     positions = np.stack([R * np.sin(thetas) * np.cos(phis),
                           R * np.sin(thetas) * np.sin(phis),
                           R * np.cos(thetas) + .1], axis=1)
-    for frame in range(FLAGS.frame_start - 1, FLAGS.frame_end + 2):
-      scene.camera.position = positions[frame - FLAGS.frame_start + 1]
-      scene.camera.look_at((0, 0, .5))
+    for frame in range(FLAGS.frame_start, FLAGS.frame_end + 1):
+      ix = frame - (FLAGS.frame_start)
+      scene.camera.position = positions[ix]
+      scene.camera.look_at((0, 0, .7 + np.random.randn()*.2))
       scene.camera.keyframe_insert("position", frame)
       scene.camera.keyframe_insert("quaternion", frame)
+      # if frame >= FLAGS.frame_start and frame <= FLAGS.frame_end:
+      frame_data = {
+        "file_path": "rgba_{:05d}.png".format(ix-1),
+        "transform_matrix": scene.camera.matrix_world.tolist(),
+      }
+      train_frames.append(frame_data)
+    
+    # n_test_frames = 10
+    # R = 2*np.random.randn(n_test_frames) + 15
+    # phis = np.random.rand(n_test_frames)*2*np.pi
+    # thetas = np.random.rand(n_test_frames)*np.pi*.5
+    # positions = np.stack([R * np.sin(thetas) * np.cos(phis),
+    #                       R * np.sin(thetas) * np.sin(phis),
+    #                       R * np.cos(thetas) + .1], axis=1)
+    # for ix in range(n_test_frames):
+    #   scene.camera.position = positions[ix]
+    #   scene.camera.look_at((0, 0, .8))
+    #   frame_data = {
+    #     "file_path": "normal_{:05d}.png".format(ix),
+    #     "transform_matrix": scene.camera.matrix_world.tolist(),
+    #   }
+    #   test_frames.append(frame_data)
+        
   else:
+    raise NotImplementedError
     if FLAGS.camera == "clevr":  # Specific position + jitter
       scene.camera.position = [7.48113, -6.50764, 5.34367] + rng.rand(3)
     if FLAGS.camera == "random":  # Random position in half-sphere-shell
@@ -183,15 +212,6 @@ for i in range(FLAGS.num_trajectories):
 
     logging.info("    Added %s at %s", obj.asset_id, obj.position)
 
-  del simulator
-
-  # --- Rendering
-  if FLAGS.save_state:
-    logging.info("Saving the renderer state to '%s' ",
-                output_dir / "scene.blend")
-    renderer.save_state(output_dir / "scene.blend")
-
-
   logging.info("Rendering the scene ...")
   data_stack = renderer.render(return_layers=('rgba', 'depth', 'segmentation',
       'normal', 'object_coordinates'))
@@ -215,6 +235,23 @@ for i in range(FLAGS.num_trajectories):
   kb.write_image_dict(data_stack, output_dir)
   kb.post_processing.compute_bboxes(data_stack["segmentation"],
                                     visible_foreground_assets)
+
+  # nerf / instant ngp format
+  kb.write_json(filename=output_dir / "transforms.json", data={
+      "aabb_scale": 2,
+      "scale": 0.18,
+      "offset": [0.5, 0.5, 0.5],
+      "camera_angle_x": scene.camera.field_of_view,
+      "frames": train_frames,
+  })
+
+  # kb.write_json(filename=output_dir / "transforms_test.json", data={
+  #     "aabb_scale": 2,
+  #     "scale": 0.18,
+  #     "offset": [0.5, 0.5, 0.5],
+  #     "camera_angle_x": scene.camera.field_of_view,
+  #     "frames": test_frames,
+  # })
 
   # --- Metadata
   logging.info("Collecting and storing metadata for each object.")
