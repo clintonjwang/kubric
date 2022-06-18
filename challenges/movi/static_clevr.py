@@ -37,6 +37,8 @@ import kubric as kb
 from kubric.simulator import PyBullet
 from kubric.renderer import Blender
 import numpy as np
+import os.path as osp
+import pybullet as pb
 
 # --- Some configuration values
 # the region in which to place objects [(min), (max)]
@@ -71,13 +73,18 @@ parser.set_defaults(save_state=False, frame_end=24, frame_rate=12,
                     resolution=256)
 
 parser.add_argument("--num_trajectories", type=int, default=2)
+parser.add_argument("--overwrite", action="store_true")
 FLAGS = parser.parse_args()
 base_outdir = FLAGS.job_dir
+pb_client = pb.connect(pb.DIRECT)
+
 for i in range(FLAGS.num_trajectories):
   # --- Common setups & resources
   FLAGS.job_dir = f"{base_outdir}/{i}"
+  if not FLAGS.overwrite and osp.exists(FLAGS.job_dir):
+    continue
   scene, rng, output_dir, scratch_dir = kb.setup(FLAGS)
-  simulator = PyBullet(scene, scratch_dir)
+  simulator = PyBullet(scene, scratch_dir, client=pb_client)
   renderer = Blender(scene, scratch_dir, samples_per_pixel=64)
   kubasic = kb.AssetSource.from_manifest(FLAGS.kubasic_assets)
 
@@ -172,16 +179,11 @@ for i in range(FLAGS.num_trajectories):
     }
     scene.add(obj)
     kb.move_until_no_overlap(obj, simulator, spawn_region=SPAWN_REGION, rng=rng)
-    # initialize velocity randomly but biased towards center
     obj.velocity = (0,0,0)
 
     logging.info("    Added %s at %s", obj.asset_id, obj.position)
 
-
-  if FLAGS.save_state:
-    logging.info("Saving the simulator state to '%s' prior to the simulation.",
-                output_dir / "scene.bullet")
-    simulator.save_state(output_dir / "scene.bullet")
+  del simulator
 
   # --- Rendering
   if FLAGS.save_state:
@@ -224,3 +226,7 @@ for i in range(FLAGS.num_trajectories):
   })
 
   kb.done()
+try:
+  pb.disconnect()
+except Exception:  # pylint: disable=broad-except
+  pass  # cleanup is already done

@@ -36,9 +36,14 @@ logger = logging.getLogger(__name__)
 class PyBullet(core.View):
   """Adds physics simulation on top of kb.Scene using PyBullet."""
 
-  def __init__(self, scene: core.Scene, scratch_dir=tempfile.mkdtemp()):
+  def __init__(self, scene: core.Scene, scratch_dir=tempfile.mkdtemp(), client=None):
     self.scratch_dir = scratch_dir
-    self.physics_client = pb.connect(pb.DIRECT)  # pb.GUI
+    if client is not None:
+      self.physics_client = client
+      self.cleanup = False
+    else:
+      self.physics_client = pb.connect(pb.DIRECT)  # pb.GUI
+      self.cleanup = True
 
     # --- Set some parameters to fix the sticky-walls problem; see
     # https://github.com/bulletphysics/bullet3/issues/3094
@@ -54,10 +59,11 @@ class PyBullet(core.View):
     })
 
   def __del__(self):
-    try:
-      pb.disconnect()
-    except Exception:  # pylint: disable=broad-except
-      pass  # cleanup code. ignore errors
+    if self.cleanup:
+      try:
+        pb.disconnect()
+      except Exception:  # pylint: disable=broad-except
+        pass  # cleanup code. ignore errors
 
   @singledispatchmethod
   def add_asset(self, asset: core.Asset) -> Optional[int]:

@@ -166,13 +166,6 @@ dome.friction = FLAGS.floor_friction
 dome.restitution = FLAGS.floor_restitution
 
 
-
-# Add DYNAMIC objects
-if FLAGS.save_state:
-  logging.info("Saving the simulator state to '%s' prior to the simulation.",
-               output_dir / "scene.bullet")
-  simulator.save_state(output_dir / "scene.bullet")
-
 # --- Rendering
 if FLAGS.save_state:
   logging.info("Saving the renderer state to '%s' ",
