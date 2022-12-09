@@ -16,4 +16,7 @@ dist/
 shapenet2kubric/shapenet2kubric.log
 examples/KuBasic/Cone/*
 Dockerfile
-output_tmp/*
+test/
+data/
+outputs/
+temp/

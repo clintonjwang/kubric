@@ -29,6 +29,12 @@ import numpy as np
 
 from kubric import core
 from kubric import file_io
+from os.path import expanduser
+OUT_DIR = expanduser("~/code/kubric/output")
+DS_DIR = expanduser("/data/vision/polina/scratch/clintonw/datasets")
+TMP_DIR = expanduser("~/code/kubric/temp")
+CODE_DIR = expanduser("~/code")
+
 
 logger = logging.getLogger(__name__)
 
@@ -61,10 +67,10 @@ class ArgumentParser(argparse_flags.ArgumentParser):
                       help="height and width of rendered image/video in pixels"
                            "Can be given as single number for square images or "
                            "in the form {height}x{width}. (default: 512x512)")
-    self.add_argument("--scratch_dir", type=str, default=tempfile.mkdtemp(),
+    self.add_argument("--scratch_dir", type=str, default=TMP_DIR,
                       help="local directory for storing intermediate files such as "
                            "downloaded assets, raw output of renderer, ... (default: temp dir)")
-    self.add_argument("--job-dir", type=str, default="output",
+    self.add_argument("--job-dir", type=str, default=OUT_DIR,
                       help="target directory for storing the worker output (default: ./output)")
 
   def parse_args(self, args=None, namespace=None):

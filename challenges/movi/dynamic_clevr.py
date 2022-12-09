@@ -32,7 +32,6 @@ MOVid-B
 """
 
 import logging
-import pdb
 
 import kubric as kb
 from kubric.simulator import PyBullet
@@ -44,6 +43,8 @@ import pybullet as pb
 # --- Some configuration values
 # the region in which to place objects [(min), (max)]
 SPAWN_REGION = [(-6, -6, .3), (6, 6, 5)]
+DYNAMIC_SPAWN_REGION = [(-5, -5, 1), (5, 5, 5)]
+VELOCITY_RANGE = [(-4., -4., 0.), (4., 4., 0.)]
 CLEVR_OBJECTS = ("cube", "cylinder", "sphere", "cone", "torus")
 KUBASIC_OBJECTS = ("cube", "cylinder", "sphere", "cone", "torus", "gear",
                    "torus_knot", "sponge", "spot", "teapot", "suzanne")
@@ -57,6 +58,11 @@ parser.add_argument("--min_num_objects", type=int, default=3,
                     help="minimum number of objects")
 parser.add_argument("--max_num_objects", type=int, default=8,
                     help="maximum number of objects")
+parser.add_argument("--min_num_dynamic_objects", type=int, default=1,
+                    help="minimum number of dynamic (tossed) objects")
+parser.add_argument("--max_num_dynamic_objects", type=int, default=3,
+                    help="maximum number of dynamic (tossed) objects")
+
 # Configuration for the floor and background
 parser.add_argument("--floor_friction", type=float, default=0.3)
 parser.add_argument("--floor_restitution", type=float, default=0.5)
@@ -65,19 +71,21 @@ parser.add_argument("--background", choices=["clevr", "colored"],
 
 # Configuration for the camera
 parser.add_argument("--camera", choices=["clevr", "random", "spiral"], default="spiral")
+parser.add_argument("--max_motion_blur", type=float, default=0.0)
 
 # Configuration for the source of the assets
 parser.add_argument("--kubasic_assets", type=str,
                     default="gs://kubric-public/assets/KuBasic/KuBasic.json")
-parser.add_argument("--save_state", action="store_true")
-# parser.add_argument("--rgb_only", action="store_true")
-res = 512
-n_frames = 256 #96
-parser.set_defaults(save_state=False, frame_end=n_frames, frame_rate=12,
-                    resolution=res)
+parser.add_argument("--hdri_assets", type=str,
+                    default="gs://kubric-public/assets/HDRI_haven/HDRI_haven.json")
+parser.add_argument("--gso_assets", type=str,
+                    default="gs://kubric-public/assets/GSO/GSO.json")
+parser.add_argument("--save_state", dest="save_state", action="store_true")
+parser.set_defaults(save_state=False, frame_end=96, frame_rate=12,
+                    resolution=256)
 
 parser.add_argument("--num_trajectories", type=int, default=2)
-parser.add_argument('-o', "--overwrite", action="store_true")
+parser.add_argument("--overwrite", action="store_true")
 FLAGS = parser.parse_args()
 base_outdir = FLAGS.job_dir
 pb_client = pb.connect(pb.DIRECT)
@@ -88,9 +96,13 @@ for i in range(FLAGS.num_trajectories):
   if not FLAGS.overwrite and osp.exists(FLAGS.job_dir):
     continue
   scene, rng, output_dir, scratch_dir = kb.setup(FLAGS)
-  simulator = PyBullet(scene, scratch_dir, client=pb_client)
-  renderer = Blender(scene, scratch_dir, samples_per_pixel=64)
+  simulator = PyBullet(scene, scratch_dir)
+  motion_blur = rng.uniform(0, FLAGS.max_motion_blur)
+  renderer = Blender(scene, scratch_dir, use_denoising=True, samples_per_pixel=64,
+                    motion_blur=motion_blur)
   kubasic = kb.AssetSource.from_manifest(FLAGS.kubasic_assets)
+  gso = kb.AssetSource.from_manifest(FLAGS.gso_assets)
+  hdri_source = kb.AssetSource.from_manifest(FLAGS.hdri_assets)
 
 
   # --- Populate the scene
@@ -98,7 +110,7 @@ for i in range(FLAGS.num_trajectories):
   logging.info("Creating a large gray floor...")
   floor_material = kb.PrincipledBSDFMaterial(roughness=1., specular=0.)
   scene += kubasic.create("dome", name="floor", material=floor_material,
-                          scale=1.0,
+                          scale=2.0,
                           friction=FLAGS.floor_friction,
                           restitution=FLAGS.floor_restitution,
                           static=True, background=True)
@@ -116,15 +128,37 @@ for i in range(FLAGS.num_trajectories):
 
   # Camera
   logging.info("Setting up the Camera...")
-  fl = 50. # focal length (mm)
-  scene.camera = kb.PerspectiveCamera(focal_length=fl, sensor_width=32)
+  scene.camera = kb.PerspectiveCamera(focal_length=35., sensor_width=32)
  
+  # Add DYNAMIC objects
+  num_dynamic_objects = rng.randint(FLAGS.min_num_dynamic_objects,
+                                    FLAGS.max_num_dynamic_objects+1)
+  logging.info("Randomly placing %d dynamic objects:", num_dynamic_objects)
+  for i in range(num_dynamic_objects):
+    obj = gso.create(asset_id=rng.choice(active_split))
+    assert isinstance(obj, kb.FileBasedObject)
+    scale = rng.uniform(0.75, 3.0)
+    obj.scale = scale / np.max(obj.bounds[1] - obj.bounds[0])
+    obj.metadata["scale"] = scale
+    scene += obj
+    kb.move_until_no_overlap(obj, simulator, spawn_region=DYNAMIC_SPAWN_REGION,
+                            rng=rng)
+    obj.velocity = (rng.uniform(*VELOCITY_RANGE) -
+                    [obj.position[0], obj.position[1], 0])
+    obj.metadata["is_dynamic"] = True
+    logging.info("    Added %s at %s", obj.asset_id, obj.position)
+
+  # Run dynamic objects simulation
+  logging.info("Running the simulation ...")
+  animation, collisions = simulator.run(frame_start=0,
+                                        frame_end=scene.frame_end+1)
+
   train_frames = []
   # test_frames = []
   num_frames = (FLAGS.frame_end + 1) - (FLAGS.frame_start)
   #(FLAGS.frame_end + 2) - (FLAGS.frame_start - 1) for optical flow
   if FLAGS.camera == "spiral":
-    R = 15 + np.random.randn(num_frames)
+    R = 15 + 2*np.random.randn(num_frames)
     phis = np.linspace(0, 6*np.pi, num_frames)
     thetas = np.linspace(np.pi*.5, np.pi*.1, num_frames)
     positions = np.stack([R * np.sin(thetas) * np.cos(phis),
@@ -161,12 +195,6 @@ for i in range(FLAGS.num_trajectories):
         
   else:
     raise NotImplementedError
-    if FLAGS.camera == "clevr":  # Specific position + jitter
-      scene.camera.position = [7.48113, -6.50764, 5.34367] + rng.rand(3)
-    if FLAGS.camera == "random":  # Random position in half-sphere-shell
-      scene.camera.position = kb.sample_point_in_half_sphere_shell(
-          inner_radius=7., outer_radius=9., offset=0.1)
-    scene.camera.look_at((0, 0, 0))
 
 
   # Add random objects
@@ -218,9 +246,8 @@ for i in range(FLAGS.num_trajectories):
     logging.info("    Added %s at %s", obj.asset_id, obj.position)
 
   logging.info("Rendering the scene ...")
-  # layers = ['rgba', 'depth', 'segmentation', 'normal', 'object_coordinates']
-  layers = ['rgba']
-  data_stack = renderer.render(return_layers=layers)
+  data_stack = renderer.render(return_layers=('rgba', 'depth', 'segmentation',
+      'normal', 'object_coordinates'))
 
   # --- Postprocessing
   kb.compute_visibility(data_stack["segmentation"], scene.assets)
@@ -242,30 +269,14 @@ for i in range(FLAGS.num_trajectories):
   kb.post_processing.compute_bboxes(data_stack["segmentation"],
                                     visible_foreground_assets)
 
-  # nerfstudio format
-  if True:
-    kb.write_json(filename=output_dir / "transforms.json", data={
-        "fl_x": fl,
-        "fl_y": fl,
-        "cx": res/2,
-        "cy": res/2,
-        "h": res,
-        "w": res,
-        "k1": 0.0,
-        # "aabb_scale": 2,
-        # "camera_angle_x": scene.camera.field_of_view,
-        "frames": train_frames,
-    })
-
   # nerf / instant ngp format
-  else:
-    kb.write_json(filename=output_dir / "transforms.json", data={
-        "aabb_scale": 2,
-        "scale": 0.18,
-        "offset": [0.5, 0.5, 0.5],
-        "camera_angle_x": scene.camera.field_of_view,
-        "frames": train_frames,
-    })
+  kb.write_json(filename=output_dir / "transforms.json", data={
+      "aabb_scale": 2,
+      "scale": 0.18,
+      "offset": [0.5, 0.5, 0.5],
+      "camera_angle_x": scene.camera.field_of_view,
+      "frames": train_frames,
+  })
 
   # kb.write_json(filename=output_dir / "transforms_test.json", data={
   #     "aabb_scale": 2,
