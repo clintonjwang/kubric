@@ -375,12 +375,12 @@ def load_scene_directory(scene_dir, target_size, layers=DEFAULT_LAYERS):
   assert scale == resolution[0] // target_size[0]
 
   paths = {
-      key: [scene_dir / f"{key}_{f:05d}.png" for f in range(num_frames)]
+      key: [scene_dir / f"{key}_{f:04d}.png" for f in range(num_frames)]
       for key in layers if key != "depth"
   }
 
   if "depth" in layers:
-    depth_paths = [scene_dir / f"depth_{f:05d}.tiff" for f in range(num_frames)]
+    depth_paths = [scene_dir / f"depth_{f:04d}.tiff" for f in range(num_frames)]
     depth_frames = np.array([
         subsample_nearest_neighbor(read_tiff(frame_path), target_size)
         for frame_path in depth_paths])

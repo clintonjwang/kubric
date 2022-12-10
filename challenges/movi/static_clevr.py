@@ -14,8 +14,6 @@
 """
 Worker file for the Multi-Object Video (MOVi) datasets A and B.
 Objects:
-  * The number of objects is randomly chosen between
-    --min_num_objects (3) and --max_num_objects (10)
   * The objects are randomly chosen from either the CLEVR (MOVi-A) or the
     KuBasic set.
   * They are either rubber or metallic with different different colors and sizes
@@ -33,6 +31,7 @@ MOVid-B
 
 import logging
 import pdb
+import shutil
 
 import kubric as kb
 from kubric.simulator import PyBullet
@@ -53,43 +52,45 @@ parser = kb.ArgumentParser()
 # Configuration for the objects of the scene
 parser.add_argument("--objects_set", choices=["clevr", "kubasic"],
                     default="clevr")
-parser.add_argument("--min_num_objects", type=int, default=3,
+parser.add_argument("--min_num_objects", type=int, default=4,
                     help="minimum number of objects")
-parser.add_argument("--max_num_objects", type=int, default=8,
+parser.add_argument("--max_num_objects", type=int, default=7,
                     help="maximum number of objects")
 # Configuration for the floor and background
 parser.add_argument("--floor_friction", type=float, default=0.3)
 parser.add_argument("--floor_restitution", type=float, default=0.5)
 parser.add_argument("--background", choices=["clevr", "colored"],
-                    default="clevr")
+                    default="colored")
 
 # Configuration for the camera
-parser.add_argument("--camera", choices=["clevr", "random", "spiral"], default="spiral")
+parser.add_argument("--camera", choices=["spiral", "random"], default="spiral")
+parser.add_argument("--start_id", default=0, type=int)
 
 # Configuration for the source of the assets
 parser.add_argument("--kubasic_assets", type=str,
                     default="gs://kubric-public/assets/KuBasic/KuBasic.json")
 parser.add_argument("--save_state", action="store_true")
-# parser.add_argument("--rgb_only", action="store_true")
-res = 512
+res = 256
 n_frames = 256 #96
 parser.set_defaults(save_state=False, frame_end=n_frames, frame_rate=12,
                     resolution=res)
 
-parser.add_argument("--num_trajectories", type=int, default=2)
+parser.add_argument('-n', "--num_trajectories", type=int, default=1)
 parser.add_argument('-o', "--overwrite", action="store_true")
 FLAGS = parser.parse_args()
-base_outdir = FLAGS.job_dir
 pb_client = pb.connect(pb.DIRECT)
 
-for i in range(FLAGS.num_trajectories):
+for i in range(FLAGS.start_id, FLAGS.num_trajectories + FLAGS.start_id):
   # --- Common setups & resources
-  FLAGS.job_dir = f"{base_outdir}/{i}"
-  if not FLAGS.overwrite and osp.exists(FLAGS.job_dir):
-    continue
+  FLAGS.job_dir = f"{FLAGS.job_dir}/{i}"
+  if osp.exists(FLAGS.job_dir):
+    if FLAGS.overwrite:
+      shutil.rmtree(FLAGS.job_dir)
+    else:
+      continue
   scene, rng, output_dir, scratch_dir = kb.setup(FLAGS)
-  simulator = PyBullet(scene, scratch_dir, client=pb_client)
-  renderer = Blender(scene, scratch_dir, samples_per_pixel=64)
+  simulator = PyBullet(scene, scratch_dir / f"{i}", client=pb_client)
+  renderer = Blender(scene, scratch_dir / f"{i}", samples_per_pixel=64)
   kubasic = kb.AssetSource.from_manifest(FLAGS.kubasic_assets)
 
 
@@ -119,13 +120,12 @@ for i in range(FLAGS.num_trajectories):
   fl = 50. # focal length (mm)
   scene.camera = kb.PerspectiveCamera(focal_length=fl, sensor_width=32)
  
-  train_frames = []
-  # test_frames = []
+  frame_list = []
   num_frames = (FLAGS.frame_end + 1) - (FLAGS.frame_start)
-  #(FLAGS.frame_end + 2) - (FLAGS.frame_start - 1) for optical flow
+  rotations = 2
   if FLAGS.camera == "spiral":
     R = 15 + np.random.randn(num_frames)
-    phis = np.linspace(0, 6*np.pi, num_frames)
+    phis = np.linspace(0, rotations*2*np.pi, num_frames)
     thetas = np.linspace(np.pi*.5, np.pi*.1, num_frames)
     positions = np.stack([R * np.sin(thetas) * np.cos(phis),
                           R * np.sin(thetas) * np.sin(phis),
@@ -136,37 +136,24 @@ for i in range(FLAGS.num_trajectories):
       scene.camera.look_at((np.random.randn()*.2, np.random.randn()*.2, .7 + np.random.randn()*.2))
       scene.camera.keyframe_insert("position", frame)
       scene.camera.keyframe_insert("quaternion", frame)
-      # if frame >= FLAGS.frame_start and frame <= FLAGS.frame_end:
       frame_data = {
         "file_path": "rgba_{:04d}.png".format(ix),
         "transform_matrix": scene.camera.matrix_world.tolist(),
       }
-      train_frames.append(frame_data)
+      frame_list.append(frame_data)
     
-    # n_test_frames = 10
-    # R = 2*np.random.randn(n_test_frames) + 15
-    # phis = np.random.rand(n_test_frames)*2*np.pi
-    # thetas = np.random.rand(n_test_frames)*np.pi*.5
-    # positions = np.stack([R * np.sin(thetas) * np.cos(phis),
-    #                       R * np.sin(thetas) * np.sin(phis),
-    #                       R * np.cos(thetas) + .1], axis=1)
-    # for ix in range(n_test_frames):
-    #   scene.camera.position = positions[ix]
-    #   scene.camera.look_at((0, 0, .8))
-    #   frame_data = {
-    #     "file_path": "normal_{:05d}.png".format(ix),
-    #     "transform_matrix": scene.camera.matrix_world.tolist(),
-    #   }
-    #   test_frames.append(frame_data)
-        
-  else:
-    raise NotImplementedError
-    if FLAGS.camera == "clevr":  # Specific position + jitter
-      scene.camera.position = [7.48113, -6.50764, 5.34367] + rng.rand(3)
-    if FLAGS.camera == "random":  # Random position in half-sphere-shell
+  elif FLAGS.camera == "random":  # Random position in half-sphere-shell
+    for frame in range(FLAGS.frame_start, FLAGS.frame_end + 1):
       scene.camera.position = kb.sample_point_in_half_sphere_shell(
           inner_radius=7., outer_radius=9., offset=0.1)
-    scene.camera.look_at((0, 0, 0))
+      scene.camera.look_at((np.random.randn()*.2, np.random.randn()*.2, .7 + np.random.randn()*.2))
+      scene.camera.keyframe_insert("position", frame)
+      scene.camera.keyframe_insert("quaternion", frame)
+      frame_data = {
+        "file_path": "rgba_{:04d}.png".format(ix),
+        "transform_matrix": scene.camera.matrix_world.tolist(),
+      }
+      frame_list.append(frame_data)
 
 
   # Add random objects
@@ -223,48 +210,48 @@ for i in range(FLAGS.num_trajectories):
   data_stack = renderer.render(return_layers=layers)
 
   # --- Postprocessing
-  kb.compute_visibility(data_stack["segmentation"], scene.assets)
-  visible_foreground_assets = [asset for asset in scene.foreground_assets
-                              if np.max(asset.metadata["visibility"]) > 0]
-  visible_foreground_assets = sorted(  # sort assets by their visibility
-      visible_foreground_assets,
-      key=lambda asset: np.sum(asset.metadata["visibility"]),
-      reverse=True)
+  # kb.compute_visibility(data_stack["segmentation"], scene.assets)
+  # visible_foreground_assets = [asset for asset in scene.foreground_assets
+  #                             if np.max(asset.metadata["visibility"]) > 0]
+  # visible_foreground_assets = sorted(  # sort assets by their visibility
+  #     visible_foreground_assets,
+  #     key=lambda asset: np.sum(asset.metadata["visibility"]),
+  #     reverse=True)
 
-  data_stack["segmentation"] = kb.adjust_segmentation_idxs(
-      data_stack["segmentation"],
-      scene.assets,
-      visible_foreground_assets)
-  scene.metadata["num_instances"] = len(visible_foreground_assets)
+  # data_stack["segmentation"] = kb.adjust_segmentation_idxs(
+  #     data_stack["segmentation"],
+  #     scene.assets,
+  #     visible_foreground_assets)
+  # scene.metadata["num_instances"] = len(visible_foreground_assets)
 
   # Save to image files
   kb.write_image_dict(data_stack, output_dir)
-  kb.post_processing.compute_bboxes(data_stack["segmentation"],
-                                    visible_foreground_assets)
+  # kb.post_processing.compute_bboxes(data_stack["segmentation"],
+  #                                   visible_foreground_assets)
 
   # nerfstudio format
   if True:
     kb.write_json(filename=output_dir / "transforms.json", data={
-        "fl_x": fl,
-        "fl_y": fl,
-        "cx": res/2,
-        "cy": res/2,
-        "h": res,
-        "w": res,
-        "k1": 0.0,
-        # "aabb_scale": 2,
-        # "camera_angle_x": scene.camera.field_of_view,
-        "frames": train_frames,
+      "fl_x": fl,
+      "fl_y": fl,
+      "cx": res/2,
+      "cy": res/2,
+      "h": res,
+      "w": res,
+      "k1": 0.0,
+      "aabb_scale": 16,
+      "camera_angle_x": scene.camera.field_of_view,
+      "frames": frame_list,
     })
 
   # nerf / instant ngp format
   else:
     kb.write_json(filename=output_dir / "transforms.json", data={
-        "aabb_scale": 2,
-        "scale": 0.18,
-        "offset": [0.5, 0.5, 0.5],
-        "camera_angle_x": scene.camera.field_of_view,
-        "frames": train_frames,
+      "aabb_scale": 2,
+      "scale": 0.18,
+      "offset": [0.5, 0.5, 0.5],
+      "camera_angle_x": scene.camera.field_of_view,
+      "frames": frame_list,
     })
 
   # kb.write_json(filename=output_dir / "transforms_test.json", data={
@@ -281,7 +268,7 @@ for i in range(FLAGS.num_trajectories):
       "flags": vars(FLAGS),
       "metadata": kb.get_scene_metadata(scene),
       "camera": kb.get_camera_info(scene.camera),
-      "instances": kb.get_instance_info(scene, visible_foreground_assets),
+      "instances": kb.get_instance_info(scene)#, visible_foreground_assets),
   })
 
   kb.done()

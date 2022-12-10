@@ -128,7 +128,7 @@ class ShapenetPretraining(tfds.core.BeamBasedBuilder):
     # we pick one view for each object for validation and the others for train
     # views are random so we can just pick the first one for validation
     val_all_image_paths = [str(d / "rgba_00000.png") for d in all_subdirs]
-    train_all_image_paths = [str(d / "rgba_{:05d}.png".format(i))
+    train_all_image_paths = [str(d / "rgba_{:03d}.png".format(i))
                              for d, i in itertools.product(all_subdirs,
                                                            range(1, nr_images_per_dir))]
     # directories are sorted by categories, so we shuffle
@@ -150,7 +150,7 @@ class ShapenetPretraining(tfds.core.BeamBasedBuilder):
       image_path = tfds.core.as_path(image_path)
       image_dir = image_path.parent
       image_index = int(image_path.name[-9:-4])  # int("rgba_00008.png"[-9:-4]) -> 8
-      key = f"{image_dir.name}_{image_index:05d}"
+      key = f"{image_dir.name}_{image_index:03d}"
 
       with tf.io.gfile.GFile(str(image_dir / "metadata.json"), "r") as fp:
         metadata = json.load(fp)

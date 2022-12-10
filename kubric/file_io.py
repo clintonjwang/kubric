@@ -223,7 +223,7 @@ def multi_write_image(data: np.ndarray, path_template: str, write_fn=write_png,
   """Write a batch of images to a series of files using a ThreadPool.
   Args:
     data: Batch of images to write. Shape = (batch_size, height, width, channels)
-    path_template: a template for the filenames (e.g. "rgb_frame_{:05d}.png").
+    path_template: a template for the filenames (e.g. "rgb_frame_{:04d}.png").
       Will be formatted with the index of the image.
     write_fn: the function used for writing the image to disk.
       Must take an image array as its first and a filename as its second argument.
@@ -246,44 +246,44 @@ def multi_write_image(data: np.ndarray, path_template: str, write_fn=write_png,
     pool.join()
 
 
-def write_rgb_batch(data, directory, file_template="rgb_{:05d}.png", max_write_threads=16):
+def write_rgb_batch(data, directory, file_template="rgb_{:04d}.png", max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 3, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_png, max_write_threads=max_write_threads)
 
 
-def write_rgba_batch(data, directory, file_template="rgba_{:05d}.png", max_write_threads=16):
+def write_rgba_batch(data, directory, file_template="rgba_{:04d}.png", max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 4, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_png, max_write_threads=max_write_threads)
 
 
-def write_uv_batch(data, directory, file_template="uv_{:05d}.png", max_write_threads=16):
+def write_uv_batch(data, directory, file_template="uv_{:04d}.png", max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 3, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_png, max_write_threads=max_write_threads)
 
 
-def write_normal_batch(data, directory, file_template="normal_{:05d}.png", max_write_threads=16):
+def write_normal_batch(data, directory, file_template="normal_{:04d}.png", max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 3, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_png, max_write_threads=max_write_threads)
 
 
-def write_coordinates_batch(data, directory, file_template="object_coordinates_{:05d}.png",
+def write_coordinates_batch(data, directory, file_template="object_coordinates_{:04d}.png",
                             max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 3, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_png, max_write_threads=max_write_threads)
 
 
-def write_depth_batch(data, directory, file_template="depth_{:05d}.tiff", max_write_threads=16):
+def write_depth_batch(data, directory, file_template="depth_{:04d}.tiff", max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 1, data.shape
   path_template = str(as_path(directory) / file_template)
   multi_write_image(data, path_template, write_fn=write_tiff, max_write_threads=max_write_threads)
 
 
-def write_segmentation_batch(data, directory, file_template="segmentation_{:05d}.png",
+def write_segmentation_batch(data, directory, file_template="segmentation_{:04d}.png",
                              max_write_threads=16):
   assert data.ndim == 4 and data.shape[-1] == 1, data.shape
   assert data.dtype in [np.uint8, np.uint16, np.uint32, np.uint64], data.dtype
@@ -293,7 +293,7 @@ def write_segmentation_batch(data, directory, file_template="segmentation_{:05d}
                     max_write_threads=max_write_threads, palette=palette)
 
 
-def write_flow_batch(data, directory, file_template="flow_{:05d}.png", name="flow",
+def write_flow_batch(data, directory, file_template="flow_{:04d}.png", name="flow",
                      max_write_threads=16, range_file="data_ranges.json"):
   assert data.ndim == 4 and data.shape[-1] == 2, data.shape
   assert data.dtype in [np.float32, np.float64], data.dtype
@@ -317,9 +317,9 @@ def write_flow_batch(data, directory, file_template="flow_{:05d}.png", name="flo
 
 
 write_forward_flow_batch = functools.partial(write_flow_batch, name="forward_flow",
-                                             file_template="forward_flow_{:05d}.png")
+                                             file_template="forward_flow_{:04d}.png")
 write_backward_flow_batch = functools.partial(write_flow_batch, name="backward_flow",
-                                              file_template="backward_flow_{:05d}.png")
+                                              file_template="backward_flow_{:04d}.png")
 
 DEFAULT_WRITERS = {
     "rgb": write_rgb_batch,
