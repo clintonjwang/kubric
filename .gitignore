@@ -14,9 +14,9 @@ dist/
 *.egg-info/
 *.blend*
 shapenet2kubric/shapenet2kubric.log
-examples/KuBasic/Cone/*
 Dockerfile
 test/
 data/
 outputs/
 temp/
+renders/

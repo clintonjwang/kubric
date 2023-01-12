@@ -29,12 +29,10 @@ import numpy as np
 
 from kubric import core
 from kubric import file_io
-from os.path import expanduser
-OUT_DIR = expanduser("~/code/kubric/output")
-DS_DIR = expanduser("/data/vision/polina/scratch/clintonw/datasets")
-TMP_DIR = expanduser("~/code/kubric/temp")
-CODE_DIR = expanduser("~/code")
 
+import os.path as osp
+OUT_DIR = osp.expandvars("$DS_DIR/kubric")
+TMP_DIR = osp.expandvars("$HOME/tmp")
 
 logger = logging.getLogger(__name__)
 
@@ -58,15 +56,15 @@ class ArgumentParser(argparse_flags.ArgumentParser):
     self.add_argument("--frame_start", type=int, default=1,
                       help="index of the first frame to render. "
                            "Note that simulation always starts at frame 0 (default: 1)")
-    self.add_argument("--frame_end", type=int, default=24,
-                      help="index of the last frame to render (default: 24)")
+    self.add_argument('-f', "--frame_end", type=int, default=256,
+                      help="index of the last frame to render")
     self.add_argument("--logging_level", type=str, default="INFO")
     self.add_argument("--seed", type=int, default=None,
                       help="(int) seed for random sampling in the worker (default: None)")
-    self.add_argument("--resolution", type=str, default="512x512",
+    self.add_argument('-r', "--resolution", type=str, default="256",
                       help="height and width of rendered image/video in pixels"
                            "Can be given as single number for square images or "
-                           "in the form {height}x{width}. (default: 512x512)")
+                           "in the form {height}x{width}.")
     self.add_argument("--scratch_dir", type=str, default=TMP_DIR,
                       help="local directory for storing intermediate files such as "
                            "downloaded assets, raw output of renderer, ... (default: temp dir)")
@@ -215,9 +213,11 @@ def process_collisions(collisions, scene, assets_subset=None):
 def setup_directories(flags):
   assert flags.scratch_dir is not None
   scratch_dir = file_io.as_path(flags.scratch_dir)
-  if scratch_dir.exists():
-    logging.info("Deleting content of old scratch-dir: %s", scratch_dir)
-    shutil.rmtree(scratch_dir)
+  while scratch_dir.exists():
+    scratch_dir = scratch_dir.parent / (scratch_dir.name + "_")
+  # if scratch_dir.exists():
+  #   logging.info("Deleting content of old scratch-dir: %s", scratch_dir)
+  #   shutil.rmtree(scratch_dir)
   scratch_dir.mkdir(parents=True)
   logging.info("Using scratch directory: %s", scratch_dir)
 
