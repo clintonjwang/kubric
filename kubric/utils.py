@@ -31,7 +31,7 @@ from kubric import core
 from kubric import file_io
 
 import os.path as osp
-OUT_DIR = osp.expandvars("$DS_DIR/kubric")
+# OUT_DIR = osp.expandvars("$DS_DIR/kubric")
 TMP_DIR = osp.expandvars("$HOME/tmp")
 
 logger = logging.getLogger(__name__)
@@ -68,8 +68,8 @@ class ArgumentParser(argparse_flags.ArgumentParser):
     self.add_argument("--scratch_dir", type=str, default=TMP_DIR,
                       help="local directory for storing intermediate files such as "
                            "downloaded assets, raw output of renderer, ... (default: temp dir)")
-    self.add_argument("--job-dir", type=str, default=OUT_DIR,
-                      help="target directory for storing the worker output (default: ./output)")
+    self.add_argument("--job_dir", type=str,
+                      help="target directory for storing the worker output")
 
   def parse_args(self, args=None, namespace=None):
     # --- parse argument in a way compatible with blender REPL
